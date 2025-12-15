@@ -29,14 +29,10 @@ export default function RoleSelection() {
           orgType: 'COMPANY',
           orgDescription: 'Company Admin'
         });
-      } else if (selectedRole === 'USER') {
-        await apiClient.post('/api/auth/set-user-type', {
-          type: 'USER'
-        });
       }
       
       await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER.GET_USER] });
-      
+      localStorage.removeItem('needsRoleSelection');
       toast.success('Role selected successfully!');
       
       setTimeout(() => {

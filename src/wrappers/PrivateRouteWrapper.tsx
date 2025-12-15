@@ -10,7 +10,7 @@ export default function PrivateRouteWrapper({
   requireRoleSelection?: boolean;
 }) {
   const { user, loading } = useAuth();
-
+  const needsRoleSelection = localStorage.getItem('needsRoleSelection') === 'true';
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -23,7 +23,7 @@ export default function PrivateRouteWrapper({
     return <Navigate to="/login" replace />;
   }
 
-  if (requireRoleSelection && (!user.type || user.type === null)) {
+  if (requireRoleSelection && needsRoleSelection) {
     return <Navigate to="/select-role" replace />;
   }
 

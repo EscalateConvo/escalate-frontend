@@ -33,6 +33,7 @@ export default function Signup() {
 
     try {
       await signup(email, password);
+      localStorage.setItem('needsRoleSelection', 'true');
       toast.success('Account created successfully!');
     } catch (error: any) {
       if (error?.code === 'auth/email-already-in-use') {
@@ -58,6 +59,7 @@ export default function Signup() {
     setGoogleLoading(true);
     try {
       await signInWithGoogle();
+      localStorage.setItem('needsRoleSelection', 'true');
       toast.success('Signed up with Google successfully!');
     } catch (error: any) {
       const errorMessage = error?.message || 'Google sign-up failed';
