@@ -56,7 +56,7 @@ body {
 
 /* Smooth transitions for interactive elements */
 button, a, input, select, textarea {
-  @apply transition-all duration-normal;
+  @apply transition-all;
 }
 
 /* Focus styles with green theme */
