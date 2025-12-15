@@ -1,15 +1,28 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Introduction from './pages/Introduction';
+import PrivateRouteWrapper from './wrappers/PrivateRouteWrapper';
+import PublicRouteWrapper from './wrappers/PublicRouteWrapper';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
+    element: <Introduction />,
   },
   {
     path: '/login',
-    element: <Login />,
+    element: 
+      <PublicRouteWrapper>
+        <Login />
+      </PublicRouteWrapper>,
+  },
+  {
+    path: '/home',
+    element:
+      <PrivateRouteWrapper> 
+        <Home />
+      </PrivateRouteWrapper>
   },
 ]);
 

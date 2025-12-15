@@ -1,25 +1,13 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { Loader2, LogOut, User, Mail, Shield } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function Home() {
   const { user, firebaseUser, loading, logout } = useAuth();
   const navigate = useNavigate();
-  const [imageError, setImageError] = useState(false);
 
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!loading && !firebaseUser) {
-      navigate('/login');
-    }
-  }, [firebaseUser, loading, navigate]);
-
-  // Reset image error when user changes
-  useEffect(() => {
-    setImageError(false);
-  }, [user?.photoURL]);
 
   // Show loading state while auth is initializing
   if (loading) {
@@ -62,14 +50,12 @@ export default function Home() {
             {/* User Profile Section */}
             <div className="flex items-start gap-4 pb-6 border-b border-border">
               <div className="flex-shrink-0">
-                {user?.photoURL && !imageError ? (
+                {user?.photoURL ? (
                   <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-primary/20 shadow-lg ring-2 ring-primary/10">
-                    <img
-                      src={user.photoURL}
-                      alt={user?.name || 'User'}
-                      className="h-full w-full object-cover"
-                      onError={() => setImageError(true)}
-                    />
+                    <Avatar className="h-full w-full rounded-full">
+                      <AvatarImage src={user.photoURL} className="object-cover" />
+                      <AvatarFallback className="rounded-full">{user.name}</AvatarFallback>
+                    </Avatar>
                   </div>
                 ) : (
                   <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-green-600 flex items-center justify-center text-primary-foreground text-2xl font-bold shadow-lg ring-2 ring-primary/10">

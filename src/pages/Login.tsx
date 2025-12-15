@@ -16,12 +16,6 @@ export default function Login() {
   const navigate = useNavigate();
   const { firebaseUser, loading: authLoading } = useAuth();
 
-  // Redirect if already logged in
-  useEffect(() => {
-    if (!authLoading && firebaseUser) {
-      navigate('/');
-    }
-  }, [firebaseUser, authLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
