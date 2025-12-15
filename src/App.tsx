@@ -6,6 +6,7 @@ import Introduction from './pages/Introduction';
 import PrivateRouteWrapper from './wrappers/PrivateRouteWrapper';
 import PublicRouteWrapper from './wrappers/PublicRouteWrapper';
 import { Toaster } from "./components/ui/sonner";
+import RoleSelection from './pages/RoleSelection';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,13 @@ const router = createBrowserRouter([
       <PublicRouteWrapper>
         <Signup />
       </PublicRouteWrapper>,
+  },
+  {
+    path: '/select-role',
+    element:
+      <PrivateRouteWrapper requireRoleSelection={false}>
+        <RoleSelection />
+      </PrivateRouteWrapper>
   },
   {
     path: '/home',

@@ -4,8 +4,10 @@ import LoadingSpinner from "../LoadingSpinner";
 
 export default function PrivateRouteWrapper({
   children,
+  requireRoleSelection = true,
 }: {
   children: React.ReactNode;
+  requireRoleSelection?: boolean;
 }) {
   const { user, loading } = useAuth();
 
@@ -19,6 +21,10 @@ export default function PrivateRouteWrapper({
 
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (requireRoleSelection && (!user.type || user.type === null)) {
+    return <Navigate to="/select-role" replace />;
   }
 
   return children;
