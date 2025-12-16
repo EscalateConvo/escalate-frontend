@@ -3,7 +3,7 @@ import { getAllModules } from "@/lib/apiService";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import LoadingSpinner from "../LoadingSpinner";
+import LoadingSpinner from "../assets/animation/LoadingSpinner";
 
 export default function OrganizationViewTests() {
   const { user } = useAuth();
