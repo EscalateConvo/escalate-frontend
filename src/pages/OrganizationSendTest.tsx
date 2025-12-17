@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import axios from "axios";
 import { createModule } from "@/lib/apiService";
 import { useAuth } from "@/context/AuthContext";
+import { ListChecks } from "lucide-react";
 
 export default function OrganizationSendTest() {
   const { user } = useAuth();
@@ -15,9 +16,11 @@ export default function OrganizationSendTest() {
   const [title, setTitle] = useState("");
   const [topic, setTopic] = useState("");
   const [difficulty, setDifficulty] = useState("MEDIUM");
-  const [role, setRole] = useState("");
+  const [aiRole, setAiRole] = useState("");
+  const [userRole, setUserRole] = useState("");
   const [systemPrompt, setSystemPrompt] = useState("");
   const [firstMessage, setFirstMessage] = useState("");
+  const [problemStatement, setProblemStatement] = useState("");
   const [userEmails, setUserEmails] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<any>(null);
@@ -33,7 +36,7 @@ export default function OrganizationSendTest() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !topic || !role || !systemPrompt || !firstMessage) {
+    if (!title || !topic || !aiRole || !userRole || !systemPrompt || !firstMessage || !problemStatement) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -54,9 +57,15 @@ export default function OrganizationSendTest() {
       title,
       topic,
       difficulty,
-      role,
-      systemPrompt,
-      firstMessage,
+      aiFields: {
+        role: aiRole,
+        systemPrompt,
+        firstMessage,
+      },
+      userFields: {
+        role: userRole,
+        problemStatement,
+      },
       userEmails: emails,
     };
 
@@ -85,7 +94,15 @@ export default function OrganizationSendTest() {
 
   return (
     <div className="container mx-auto max-w-3xl p-6">
-      <h1 className="text-2xl font-semibold mb-4">Assign a New Test</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold">Assign a New Test</h1>
+        <Link to="/manage-tests">
+          <Button variant="outline" className="flex items-center gap-2 hover:bg-green-50 hover:border-green-200 hover:text-green-700 transition-colors">
+            <ListChecks className="h-4 w-4" />
+            Manage Tests
+          </Button>
+        </Link>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <Label>Title</Label>
@@ -98,8 +115,13 @@ export default function OrganizationSendTest() {
         </div>
 
         <div>
-          <Label>Role</Label>
-          <Input value={role} onChange={(e) => setRole(e.target.value)} placeholder="Role the test will simulate (e.g., Support Agent)" />
+          <Label>AI Role</Label>
+          <Input value={aiRole} onChange={(e) => setAiRole(e.target.value)} placeholder="Role the AI will play (e.g., Customer, Manager)" />
+        </div>
+
+        <div>
+          <Label>User Role</Label>
+          <Input value={userRole} onChange={(e) => setUserRole(e.target.value)} placeholder="Role the test taker will simulate (e.g., Support Agent)" />
         </div>
 
         <div>
@@ -113,12 +135,17 @@ export default function OrganizationSendTest() {
 
         <div>
           <Label>System Prompt</Label>
-          <textarea className="w-full rounded-md border px-3 py-2" rows={4} value={systemPrompt} onChange={(e) => setSystemPrompt(e.target.value)} />
+          <textarea className="w-full rounded-md border px-3 py-2" rows={4} value={systemPrompt} onChange={(e) => setSystemPrompt(e.target.value)} placeholder="Instructions for the AI agent's behavior" />
         </div>
 
         <div>
           <Label>First Message</Label>
-          <textarea className="w-full rounded-md border px-3 py-2" rows={3} value={firstMessage} onChange={(e) => setFirstMessage(e.target.value)} />
+          <textarea className="w-full rounded-md border px-3 py-2" rows={3} value={firstMessage} onChange={(e) => setFirstMessage(e.target.value)} placeholder="The initial message the AI will send" />
+        </div>
+
+        <div>
+          <Label>Problem Statement</Label>
+          <textarea className="w-full rounded-md border px-3 py-2" rows={4} value={problemStatement} onChange={(e) => setProblemStatement(e.target.value)} placeholder="The problem or scenario the test taker needs to solve" />
         </div>
 
         <div>

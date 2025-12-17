@@ -41,3 +41,38 @@ export const getAllModules = async () => {
   const res = await apiClient.get<{ data: any[] }>(`/api/modules/getall`);
   return res.data.data;
 };
+
+export const getOneModule = async (moduleId: string) => {
+  const res = await apiClient.get<{ data: any }>(`/api/modules/${moduleId}`);
+  return res.data.data;
+};
+
+export const updateModule = async (moduleId: string, data: any) => {
+  const res = await apiClient.put<{ data: any }>(`/api/modules/${moduleId}`, data);
+  return res.data.data;
+};
+
+export const deleteModule = async (moduleId: string) => {
+  const res = await apiClient.delete<{ message: string }>(`/api/modules/${moduleId}`);
+  return res.data;
+};
+
+export const generateShareURL = async (moduleId: string, expiryDays?: number) => {
+  const res = await apiClient.post<{ data: any }>(`/api/modules/${moduleId}/share`, { expiryDays });
+  return res.data.data;
+};
+
+export const revokeShareURL = async (moduleId: string) => {
+  const res = await apiClient.delete<{ message: string }>(`/api/modules/${moduleId}/share`);
+  return res.data;
+};
+
+export const getAllModulesByUserEmail = async () => {
+  const res = await apiClient.get<{ data: any[] }>(`/api/modules/shared/all`);
+  return res.data.data;
+};
+
+export const getModuleByEmailOrShareToken = async (shareToken: string) => {
+  const res = await apiClient.get<{ data: any }>(`/api/modules/shared/${shareToken}`);
+  return res.data.data;
+};
