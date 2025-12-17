@@ -54,7 +54,9 @@ const router = createBrowserRouter([
     path: '/assign-test',
     element: (
       <PrivateRouteWrapper>
-        <OrganizationSendTest />
+        <DashboardLayout>
+          <OrganizationSendTest />
+        </DashboardLayout>
       </PrivateRouteWrapper>
     ),
   },
@@ -62,7 +64,9 @@ const router = createBrowserRouter([
     path: '/manage-tests',
     element: (
       <PrivateRouteWrapper>
-        <OrganizationViewTests />
+        <DashboardLayout>
+          <OrganizationViewTests />
+        </DashboardLayout>
       </PrivateRouteWrapper>
     ),
   },

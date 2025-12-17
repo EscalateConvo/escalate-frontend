@@ -1,32 +1,41 @@
 import {
   Building2,
   Calendar,
-  Clock,
   Mail,
   Shield,
   UserIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useQuery } from "@tanstack/react-query";
+import { getAllModulesByUserEmail } from "@/lib/apiService";
+import LoadingSpinner from "../../assets/animation/LoadingSpinner";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const TestTakerHome = ({ user }: { user: User | null }) => {
-  const pendingTests = [
-    {
-      id: 1,
-      companyName: "TechCorp Inc.",
-      organizationName: "TechCorp",
-      assignedDate: "2025-12-10",
-      dueDate: "2025-12-20",
-      testType: "Customer Service Simulation",
-    },
-    {
-      id: 2,
-      companyName: "StartupX",
-      organizationName: "StartupX Solutions",
-      assignedDate: "2025-12-12",
-      dueDate: "2025-12-22",
-      testType: "Technical Support Scenario",
-    },
-  ];
+  const { data: modules, isLoading, error } = useQuery({
+    queryKey: ["test-taker-modules"],
+    queryFn: getAllModulesByUserEmail,
+    enabled: !!user && user.type === "USER",
+  });
+
+  useEffect(() => {
+    if (error) {
+      toast.error("Failed to fetch assigned tests");
+    }
+  }, [error]);
+
+  // Transform API data to match component format
+  const pendingTests = modules
+    ? modules.map((module: any) => ({
+        id: module._id,
+        organizationName: module.organizationName,
+        assignedDate: module.createdAt,
+        testType: module.title,
+        topic: module.topic,
+        userFields: module.userFields,
+      }))
+    : [];
 
   return (
     <div className="container mx-auto max-w-6xl">
@@ -96,13 +105,17 @@ const TestTakerHome = ({ user }: { user: User | null }) => {
           Pending Tests
         </h2>
 
-        {pendingTests.length === 0 ? (
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <LoadingSpinner />
+          </div>
+        ) : pendingTests.length === 0 ? (
           <div className="bg-white rounded-xl shadow-lg border border-green-100 p-12 text-center">
             <p className="text-muted-foreground text-lg">
               No pending tests at the moment
             </p>
             <p className="text-sm text-muted-foreground mt-2">
-              New assignments will appear here
+              New assignments will appear here when organizations assign tests to your email
             </p>
           </div>
         ) : (
@@ -110,7 +123,7 @@ const TestTakerHome = ({ user }: { user: User | null }) => {
             {pendingTests.map((test) => (
               <div
                 key={test.id}
-                className="bg-white rounded-xl shadow-lg border border-green-100 p-6 hover:shadow-xl transition-shadow duration-200"
+                className="bg-white rounded-xl shadow-lg border border-green-100 p-6 hover:shadow-xl hover:bg-green-50 hover:border-green-200 transition-all duration-200"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="flex-1">
@@ -127,19 +140,27 @@ const TestTakerHome = ({ user }: { user: User | null }) => {
                         </span>
                       </div>
 
+                      {test.topic && (
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <span className="text-sm">
+                            <span className="font-medium">Topic:</span> {test.topic}
+                          </span>
+                        </div>
+                      )}
+
+                      {test.userFields?.role && (
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <span className="text-sm">
+                            <span className="font-medium">Your Role:</span> {test.userFields.role}
+                          </span>
+                        </div>
+                      )}
+
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Calendar className="h-4 w-4 shrink-0" />
                         <span className="text-sm">
                           <span className="font-medium">Assigned:</span>{" "}
                           {new Date(test.assignedDate).toLocaleDateString()}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Clock className="h-4 w-4 shrink-0" />
-                        <span className="text-sm">
-                          <span className="font-medium">Due:</span>{" "}
-                          {new Date(test.dueDate).toLocaleDateString()}
                         </span>
                       </div>
                     </div>

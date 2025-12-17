@@ -1,7 +1,15 @@
 import { Mail, Shield } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useQuery } from "@tanstack/react-query";
+import { getOrganizationStatistics } from "@/lib/apiService";
+import LoadingSpinner from "../../assets/animation/LoadingSpinner";
 
 const OrganizationHome = ({ user }: { user: User | null }) => {
+  const { data: statistics, isLoading } = useQuery({
+    queryKey: ["org-statistics"],
+    queryFn: getOrganizationStatistics,
+    enabled: !!user && user.type === "ORGANIZATION",
+  });
   return (
     <div className="container mx-auto max-w-6xl">
       <div className="mb-8 animate-in fade-in slide-in-from-top-4 duration-500">
@@ -95,22 +103,34 @@ const OrganizationHome = ({ user }: { user: User | null }) => {
           <h3 className="text-xl font-semibold mb-6 text-foreground">
             Statistics
           </h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">
-                Total Tests Assigned
-              </span>
-              <span className="text-2xl font-bold text-primary">0</span>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <LoadingSpinner />
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Completed</span>
-              <span className="text-2xl font-bold text-green-600">0</span>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">
+                  Total Tests Assigned
+                </span>
+                <span className="text-2xl font-bold text-primary">
+                  {statistics?.totalTestsAssigned || 0}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Completed</span>
+                <span className="text-2xl font-bold text-green-600">
+                  {statistics?.completed || 0}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Pending</span>
+                <span className="text-2xl font-bold text-amber-600">
+                  {statistics?.pending || 0}
+                </span>
+              </div>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Pending</span>
-              <span className="text-2xl font-bold text-amber-600">0</span>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

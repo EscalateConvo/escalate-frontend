@@ -23,7 +23,6 @@ export default function OrganizationSendTest() {
   const [problemStatement, setProblemStatement] = useState("");
   const [userEmails, setUserEmails] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [serverError, setServerError] = useState<any>(null);
 
   if (user?.type !== "ORGANIZATION") {
     return (
@@ -69,7 +68,6 @@ export default function OrganizationSendTest() {
       userEmails: emails,
     };
 
-    setServerError(null);
     try {
       setSubmitting(true);
       console.debug("Assign test payload:", payload);
@@ -80,7 +78,6 @@ export default function OrganizationSendTest() {
       if (axios.isAxiosError(err)) {
         const serverMsg = (err.response && (err.response as any).data && (err.response as any).data.message) || err.message;
         console.error("API error creating module:", err.response || err.message);
-        setServerError(err.response ? (err.response as any).data : { message: err.message });
         toast.error(serverMsg as string);
       } else if (err instanceof Error) {
         toast.error(err.message);
@@ -156,12 +153,6 @@ export default function OrganizationSendTest() {
         <div className="pt-2">
           <Button type="submit" disabled={submitting}>{submitting ? 'Assigning...' : 'Assign Test'}</Button>
         </div>
-        {serverError && (
-          <div className="mt-4 bg-red-50 border border-red-200 p-3 rounded">
-            <p className="text-sm font-medium text-red-700">Server error (debug):</p>
-            <pre className="text-xs text-red-800 mt-2 overflow-auto max-h-40">{JSON.stringify(serverError, null, 2)}</pre>
-          </div>
-        )}
       </form>
     </div>
   );

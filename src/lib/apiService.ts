@@ -76,3 +76,8 @@ export const getModuleByEmailOrShareToken = async (shareToken: string) => {
   const res = await apiClient.get<{ data: any }>(`/api/modules/shared/${shareToken}`);
   return res.data.data;
 };
+
+export const getOrganizationStatistics = async () => {
+  const res = await apiClient.get<{ data: { totalTestsAssigned: number; completed: number; pending: number } }>(`/api/modules/statistics`);
+  return res.data.data;
+};
