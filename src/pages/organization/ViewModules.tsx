@@ -9,8 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import LoadingSpinner from "../assets/animation/LoadingSpinner";
-import DashboardLayout from "@/layouts/DashboardLayout";
+import LoadingSpinner from "../../assets/animation/LoadingSpinner";
 import {
   Plus,
   RefreshCw,
@@ -143,7 +142,7 @@ export default function ViewModules() {
   } = useQuery<Module[]>({
     queryKey: ["org-modules"],
     queryFn: getAllModules,
-    enabled: !!user && user.type === "ORGANIZATION",
+    enabled: !!user,
   });
 
   const deleteMutation = useMutation({
@@ -153,8 +152,11 @@ export default function ViewModules() {
       queryClient.invalidateQueries({ queryKey: ["org-modules"] });
       setDeleteModal({ isOpen: false, moduleId: "", moduleName: "" });
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to delete module");
+    onError: (err) => {
+      const errorMessage =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to delete module";
+      toast.error(errorMessage);
     },
   });
 
@@ -171,10 +173,11 @@ export default function ViewModules() {
         setTimeout(() => setCopiedId(null), 2000);
       }
     },
-    onError: (err: any) => {
-      toast.error(
-        err?.response?.data?.message || "Failed to generate share link",
-      );
+    onError: (err) => {
+      const errorMessage =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to generate share link";
+      toast.error(errorMessage);
     },
   });
 
@@ -185,10 +188,11 @@ export default function ViewModules() {
       toast.success("Share link revoked");
       queryClient.invalidateQueries({ queryKey: ["org-modules"] });
     },
-    onError: (err: any) => {
-      toast.error(
-        err?.response?.data?.message || "Failed to revoke share link",
-      );
+    onError: (err) => {
+      const errorMessage =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to revoke share link";
+      toast.error(errorMessage);
     },
   });
 
@@ -217,33 +221,11 @@ export default function ViewModules() {
     return module.shareURL && !isShareExpired(module.shareTokenExpiry);
   };
 
-  if (user?.type !== "ORGANIZATION") {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center space-y-3">
-            <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto">
-              <Settings2 className="w-8 h-8 text-slate-400" />
-            </div>
-            <h2 className="text-xl font-semibold text-slate-900">
-              Not Authorized
-            </h2>
-            <p className="text-slate-500">
-              This page is only for organization accounts.
-            </p>
-          </div>
-        </div>
-      </DashboardLayout>
-    );
-  }
-
   if (isLoading) {
     return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <LoadingSpinner />
-        </div>
-      </DashboardLayout>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <LoadingSpinner />
+      </div>
     );
   }
 
@@ -252,7 +234,7 @@ export default function ViewModules() {
   }
 
   return (
-    <DashboardLayout>
+    <>
       <div className="max-w-5xl mx-auto p-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -502,6 +484,6 @@ export default function ViewModules() {
         moduleName={deleteModal.moduleName}
         isDeleting={deleteMutation.isPending}
       />
-    </DashboardLayout>
+    </>
   );
 }

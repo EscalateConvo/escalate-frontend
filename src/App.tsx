@@ -1,16 +1,16 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Introduction from './pages/Introduction';
-import CreateModule from './pages/CreateModule';
-import ViewModules from './pages/ViewModules';
-import Modules from './pages/Modules';
-import SharedModuleDetail from './pages/SharedModuleDetail';
-import ModuleDetail from './pages/ModuleDetail';
-import PrivateRouteWrapper from './wrappers/PrivateRouteWrapper';
-import PublicRouteWrapper from './wrappers/PublicRouteWrapper';
-import RoleSelectionRouteWrapper from './wrappers/RoleSelectionRouteWrapper';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Introduction from "./pages/Introduction";
+import Modules from "./pages/Modules";
+import { CreateModule, ModuleDetail } from "./pages/organization";
+import { SharedModuleDetail } from "./pages/testtaker";
+import PrivateRouteWrapper from "./wrappers/PrivateRouteWrapper";
+import PublicRouteWrapper from "./wrappers/PublicRouteWrapper";
+import RoleSelectionRouteWrapper from "./wrappers/RoleSelectionRouteWrapper";
+import OrganizationRouteWrapper from "./wrappers/OrganizationRouteWrapper";
+import TestTakerRouteWrapper from "./wrappers/TestTakerRouteWrapper";
 import { Toaster } from "./components/ui/sonner";
 import RoleSelection from "./pages/RoleSelection";
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -37,11 +37,12 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/select-role',
-    element:
+    path: "/select-role",
+    element: (
       <RoleSelectionRouteWrapper>
         <RoleSelection />
       </RoleSelectionRouteWrapper>
+    ),
   },
   {
     path: "/home",
@@ -54,7 +55,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/modules',
+    path: "/modules",
     element: (
       <PrivateRouteWrapper>
         <Modules />
@@ -62,27 +63,27 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/modules/create',
+    path: "/modules/create",
     element: (
-      <PrivateRouteWrapper>
+      <OrganizationRouteWrapper>
         <CreateModule />
-      </PrivateRouteWrapper>
+      </OrganizationRouteWrapper>
     ),
   },
   {
-    path: '/modules/:moduleId',
+    path: "/modules/:moduleId",
     element: (
-      <PrivateRouteWrapper>
+      <OrganizationRouteWrapper>
         <ModuleDetail />
-      </PrivateRouteWrapper>
+      </OrganizationRouteWrapper>
     ),
   },
   {
-    path: '/shared/:moduleId',
+    path: "/shared/:moduleId",
     element: (
-      <PrivateRouteWrapper>
+      <TestTakerRouteWrapper>
         <SharedModuleDetail />
-      </PrivateRouteWrapper>
+      </TestTakerRouteWrapper>
     ),
   },
 ]);

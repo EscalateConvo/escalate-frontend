@@ -1,13 +1,22 @@
-import ViewModules from "./ViewModules";
-import SharedModules from "./SharedModules";
+import { ViewModules } from "./organization";
+import { SharedModules } from "./testtaker";
 import { useAuth } from "@/context/AuthContext";
+import DashboardLayout from "@/layouts/DashboardLayout";
 
 export default function Modules() {
   const { user } = useAuth();
 
   if (user?.type === "ORGANIZATION") {
-    return <ViewModules />;
+    return (
+      <DashboardLayout>
+        <ViewModules />
+      </DashboardLayout>
+    );
   }
 
-  return <SharedModules />;
+  return (
+    <DashboardLayout>
+      <SharedModules />
+    </DashboardLayout>
+  );
 }

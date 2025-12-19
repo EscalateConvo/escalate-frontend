@@ -1,5 +1,5 @@
 import OrganizationHome from "@/components/organization/OrganizationHome";
-import SharedModules from "./SharedModules";
+import SharedModules from "./testtaker/SharedModules";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Home() {

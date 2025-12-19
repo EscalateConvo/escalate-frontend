@@ -24,6 +24,32 @@ export interface ModuleUserFields {
   problemStatement: string;
 }
 
+export type AttemptStatus = "PENDING" | "ONGOING" | "COMPLETED";
+
+export interface AttemptReport {
+  _id: string;
+  score?: number;
+  feedback?: string;
+}
+
+export interface Attempt {
+  _id: string;
+  module: string;
+  user: string;
+  attemptStatus: AttemptStatus;
+  attemptReport?: AttemptReport | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface SharedModule {
+  _id: string;
+  title: string;
+  topic: string;
+  userFields: ModuleUserFields;
+  attempt: Attempt | null;
+}
+
 export interface Module {
   _id: string;
   title: string;
@@ -138,8 +164,8 @@ export const getModuleByShareToken = async (
 
 export const getSharedModuleById = async (
   moduleId: string,
-): Promise<Module> => {
-  const res = await apiClient.get<{ data: Module }>(
+): Promise<SharedModule> => {
+  const res = await apiClient.get<{ data: SharedModule }>(
     `/api/modules/shared/${moduleId}`,
   );
   return res.data.data;
