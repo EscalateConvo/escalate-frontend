@@ -4,14 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import LoadingSpinner from "../../assets/animation/LoadingSpinner";
-import {
-  Eye,
-  Settings2,
-  CheckCircle2,
-  XCircle,
-  Clock,
-  RefreshCcw,
-} from "lucide-react";
+import { Eye, Settings2, Clock, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function SharedModules() {
@@ -96,31 +89,11 @@ export default function SharedModules() {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div
-                    className={`w-12 h-12 rounded-lg flex items-center justify-center ${module.active ? "bg-indigo-100" : "bg-slate-100"}`}
-                  >
-                    <Settings2
-                      className={`w-6 h-6 ${module.active ? "text-indigo-600" : "text-slate-400"}`}
-                    />
-                  </div>
                   <div>
                     <h3 className="font-semibold text-slate-900">
                       {module.title}
                     </h3>
                     <div className="flex items-center gap-2 mt-1 flex-wrap">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${module.active ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"}`}
-                      >
-                        {module.active ? (
-                          <>
-                            <CheckCircle2 className="w-3 h-3" /> Active
-                          </>
-                        ) : (
-                          <>
-                            <XCircle className="w-3 h-3" /> Inactive
-                          </>
-                        )}
-                      </span>
                       {module.topic && (
                         <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
                           {module.topic}
