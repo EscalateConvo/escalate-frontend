@@ -5,7 +5,7 @@ import Signup from "./pages/Signup";
 import Introduction from "./pages/Introduction";
 import Modules from "./pages/Modules";
 import { CreateModule, ModuleDetail } from "./pages/organization";
-import { SharedModuleDetail } from "./pages/testtaker";
+import { SharedModuleDetail, Conversation } from "./pages/testtaker";
 import PrivateRouteWrapper from "./wrappers/PrivateRouteWrapper";
 import PublicRouteWrapper from "./wrappers/PublicRouteWrapper";
 import RoleSelectionRouteWrapper from "./wrappers/RoleSelectionRouteWrapper";
@@ -83,6 +83,14 @@ const router = createBrowserRouter([
     element: (
       <TestTakerRouteWrapper>
         <SharedModuleDetail />
+      </TestTakerRouteWrapper>
+    ),
+  },
+  {
+    path: "/conversation/:moduleId",
+    element: (
+      <TestTakerRouteWrapper>
+        <Conversation />
       </TestTakerRouteWrapper>
     ),
   },

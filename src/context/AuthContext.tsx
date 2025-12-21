@@ -65,6 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         try {
           const token = await fbUser.getIdToken();
+          console.log("Token", token);
           setToken(token);
 
           // Check if we've already processed this user's registration

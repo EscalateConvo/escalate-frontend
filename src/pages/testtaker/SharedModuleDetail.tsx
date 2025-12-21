@@ -1,20 +1,19 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { getSharedModuleById } from "@/queries/moduleQueries";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { getSharedModuleById, startAttempt } from "@/queries/moduleQueries";
 import { useAuth } from "@/context/AuthContext";
 import LoadingSpinner from "../../assets/animation/LoadingSpinner";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   Play,
-  RotateCcw,
   CheckCircle2,
   Trophy,
   MessageSquareText,
   UserCircle,
   Sparkles,
   BookOpen,
-  Clock,
 } from "lucide-react";
 
 export default function SharedModuleDetail() {
@@ -30,6 +29,22 @@ export default function SharedModuleDetail() {
     queryKey: ["shared-module", moduleId],
     queryFn: () => getSharedModuleById(moduleId as string),
     enabled: !!moduleId && !!user,
+  });
+
+  const startAttemptMutation = useMutation({
+    mutationFn: () => startAttempt(moduleId as string),
+    onSuccess: (data) => {
+      if (data.elevenLabsSignedURL) {
+        navigate(`/conversation/${moduleId}`, {
+          state: { signedUrl: data.elevenLabsSignedURL, attemptId: data._id },
+        });
+      } else {
+        toast.error("Failed to get conversation URL");
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to start assessment");
+    },
   });
 
   if (isLoading) {
@@ -68,17 +83,10 @@ export default function SharedModuleDetail() {
   const attempt = module.attempt;
   const hasAttempt = attempt !== null;
   const isCompleted = hasAttempt && attempt.attemptStatus === "COMPLETED";
-  const isOngoing = hasAttempt && attempt.attemptStatus === "ONGOING";
-  const isPending = !hasAttempt || attempt.attemptStatus === "PENDING";
+  const isPending = hasAttempt && attempt.attemptStatus === "PENDING";
 
   const handleStartTest = () => {
-    // TODO: Navigate to test taking page or trigger test start
-    console.log("Starting test for module:", moduleId);
-  };
-
-  const handleContinueTest = () => {
-    // TODO: Navigate to continue the ongoing test
-    console.log("Continuing test for module:", moduleId);
+    startAttemptMutation.mutate();
   };
 
   return (
@@ -102,12 +110,6 @@ export default function SharedModuleDetail() {
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
                   <CheckCircle2 className="w-3 h-3" />
                   Completed
-                </span>
-              )}
-              {isOngoing && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 animate-pulse">
-                  <Clock className="w-3 h-3" />
-                  In Progress
                 </span>
               )}
             </div>
@@ -150,34 +152,21 @@ export default function SharedModuleDetail() {
               <div className="mt-8 pt-6 border-t border-slate-100">
                 <Button
                   onClick={handleStartTest}
-                  className="bg-linear-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-semibold px-8 py-6 h-auto rounded-xl shadow-lg shadow-teal-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-teal-500/30 hover:-translate-y-0.5"
+                  disabled={startAttemptMutation.isPending}
+                  className="bg-linear-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-semibold px-8 py-6 h-auto rounded-xl shadow-lg shadow-teal-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-teal-500/30 hover:-translate-y-0.5 disabled:opacity-50"
                 >
-                  <Play className="w-5 h-5 mr-2" />
-                  Start Assessment
+                  {startAttemptMutation.isPending ? (
+                    <>
+                      <LoadingSpinner />
+                      Starting...
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-5 h-5 mr-2" />
+                      Start Assessment
+                    </>
+                  )}
                 </Button>
-              </div>
-            )}
-
-            {isOngoing && (
-              <div className="mt-8 pt-6 border-t border-slate-100">
-                <div className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full bg-amber-50 border border-amber-200">
-                  <RotateCcw
-                    className="w-4 h-4 text-amber-600 animate-spin"
-                    style={{ animationDuration: "3s" }}
-                  />
-                  <span className="text-sm font-semibold text-amber-700">
-                    Assessment in progress
-                  </span>
-                </div>
-                <div>
-                  <Button
-                    onClick={handleContinueTest}
-                    className="bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold px-8 py-6 h-auto rounded-xl shadow-lg shadow-amber-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/30 hover:-translate-y-0.5"
-                  >
-                    <Play className="w-5 h-5 mr-2" />
-                    Continue Assessment
-                  </Button>
-                </div>
               </div>
             )}
           </div>

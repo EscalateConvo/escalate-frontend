@@ -24,7 +24,7 @@ export interface ModuleUserFields {
   problemStatement: string;
 }
 
-export type AttemptStatus = "PENDING" | "ONGOING" | "COMPLETED";
+export type AttemptStatus = "PENDING" | "COMPLETED";
 
 export interface AttemptReport {
   _id: string;
@@ -38,6 +38,7 @@ export interface Attempt {
   user: string;
   attemptStatus: AttemptStatus;
   attemptReport?: AttemptReport | null;
+  elevenLabsSignedURL?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -168,5 +169,12 @@ export const getSharedModuleById = async (
   const res = await apiClient.get<{ data: SharedModule }>(
     `/api/modules/shared/${moduleId}`,
   );
+  return res.data.data;
+};
+
+export const startAttempt = async (moduleId: string): Promise<Attempt> => {
+  const res = await apiClient.post<{ data: Attempt }>(`/api/attempts/start`, {
+    moduleId,
+  });
   return res.data.data;
 };
