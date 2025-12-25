@@ -36,7 +36,7 @@ const OrganizationHome = ({ user }: { user: User | null }) => {
   const maxValue = Math.max(totalModules, completedAttempts, activeModules, 1);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-8">
       <div className="container mx-auto max-w-7xl px-4 space-y-8">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-700">
           <div className="space-y-2">

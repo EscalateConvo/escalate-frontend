@@ -83,7 +83,7 @@ export default function SharedModuleDetail() {
   const attempt = module.attempt;
   const hasAttempt = attempt !== null;
   const isCompleted = hasAttempt && attempt.attemptStatus === "COMPLETED";
-  const isPending = hasAttempt && attempt.attemptStatus === "PENDING";
+  const isPending = !hasAttempt || attempt?.attemptStatus === "PENDING";
 
   const handleStartTest = () => {
     startAttemptMutation.mutate();

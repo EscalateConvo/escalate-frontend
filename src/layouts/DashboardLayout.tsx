@@ -19,9 +19,7 @@ function DashboardContent({ children }: { children: ReactNode }) {
       {(!open || isMobile) && (
         <SidebarTrigger className="fixed top-4 left-4 z-50" />
       )}
-      <main className="flex-1 p-4 pt-16 sm:p-6 sm:pt-16 lg:p-8 lg:pt-16">
-        {children}
-      </main>
+      <main className="flex-1">{children}</main>
     </SidebarInset>
   );
 }

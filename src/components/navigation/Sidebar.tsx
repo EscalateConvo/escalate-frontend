@@ -84,8 +84,8 @@ export default function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
+      <SidebarSeparator />
       <SidebarFooter className="p-2">
-        <SidebarSeparator className="mb-2" />
         <div className="flex items-center gap-3 px-2 py-2 group-data-[collapsible=icon]:justify-center">
           {user?.photoURL ? (
             <Avatar className="h-8 w-8">
