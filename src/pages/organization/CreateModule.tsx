@@ -174,9 +174,9 @@ export default function CreateModule() {
       await createModule(formData);
       toast.success("Module created successfully!");
       navigate("/modules");
-    } catch (err) {
+    } catch (err: unknown) {
       const errorMessage =
-        err?.response?.data?.message || "Failed to create module";
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Failed to create module";
       toast.error(errorMessage);
       console.error("Error creating module:", err);
     } finally {

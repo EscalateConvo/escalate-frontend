@@ -132,8 +132,8 @@ export default function ModuleDetail() {
       queryClient.invalidateQueries({ queryKey: ["org-modules"] });
       setIsEditing(false);
     },
-    onError: (err) => {
-      toast.error(err.response?.data?.message || "Failed to update module");
+    onError: (err: unknown) => {
+      toast.error((err as { response?: { data?: { message?: string } } }).response?.data?.message || "Failed to update module");
     },
   });
 
@@ -148,9 +148,9 @@ export default function ModuleDetail() {
         toast.success("Link copied to clipboard!");
       }
     },
-    onError: (err) => {
+    onError: (err: unknown) => {
       toast.error(
-        err?.response?.data?.message || "Failed to generate share link",
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Failed to generate share link",
       );
     },
   });
@@ -162,9 +162,9 @@ export default function ModuleDetail() {
       queryClient.invalidateQueries({ queryKey: ["module", moduleId] });
       queryClient.invalidateQueries({ queryKey: ["org-modules"] });
     },
-    onError: (err) => {
+    onError: (err: unknown) => {
       toast.error(
-        err?.response?.data?.message || "Failed to revoke share link",
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Failed to revoke share link",
       );
     },
   });
