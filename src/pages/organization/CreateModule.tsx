@@ -176,7 +176,8 @@ export default function CreateModule() {
       navigate("/modules");
     } catch (err: unknown) {
       const errorMessage =
-        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Failed to create module";
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to create module";
       toast.error(errorMessage);
       console.error("Error creating module:", err);
     } finally {

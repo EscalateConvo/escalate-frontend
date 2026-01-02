@@ -133,7 +133,10 @@ export default function ModuleDetail() {
       setIsEditing(false);
     },
     onError: (err: unknown) => {
-      toast.error((err as { response?: { data?: { message?: string } } }).response?.data?.message || "Failed to update module");
+      toast.error(
+        (err as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Failed to update module",
+      );
     },
   });
 
@@ -150,7 +153,8 @@ export default function ModuleDetail() {
     },
     onError: (err: unknown) => {
       toast.error(
-        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Failed to generate share link",
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to generate share link",
       );
     },
   });
@@ -164,7 +168,8 @@ export default function ModuleDetail() {
     },
     onError: (err: unknown) => {
       toast.error(
-        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Failed to revoke share link",
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Failed to revoke share link",
       );
     },
   });
