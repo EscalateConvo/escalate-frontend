@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Brain, LogOut, Home } from "lucide-react";
+import { Brain, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
